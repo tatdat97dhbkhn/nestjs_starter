@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -18,8 +19,8 @@ export default class Post {
   @Column()
   public title: string;
 
-  @Column()
-  public content: string;
+  @Column('text', { array: true, nullable: true })
+  public paragraphs: string[];
 
   @Column({ nullable: true })
   // @Transform((value) => {
@@ -29,6 +30,7 @@ export default class Post {
   // })
   public category?: string;
 
+  @Index()
   @ManyToOne(() => User, (author: User) => author.posts)
   public author: User;
 

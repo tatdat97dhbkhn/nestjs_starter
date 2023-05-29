@@ -5,6 +5,8 @@ import * as bcrypt from 'bcrypt';
 import User from './user.entity';
 import { DATABASE_CONNECTION } from '../shared/providers-ids';
 import { UserParamsDto } from './dto/userParams.dto';
+import LocalFileDto from '../localFiles/dto/localFile.dto';
+import LocalFilesService from '../localFiles/localFiles.service';
 
 @Injectable()
 export default class UsersService {
@@ -12,6 +14,7 @@ export default class UsersService {
 
   constructor(
     @Inject(DATABASE_CONNECTION) private databaseConnection: DataSource,
+    private localFilesService: LocalFilesService,
   ) {
     this.usersRepository = this.databaseConnection.getRepository<User>(User);
   }
@@ -68,5 +71,17 @@ export default class UsersService {
     if (isRefreshTokenMatching) {
       return user;
     }
+  }
+
+  async addAvatar(userId: number, fileData: LocalFileDto) {
+    const avatar = await this.localFilesService.saveLocalFileData(fileData);
+    await this.usersRepository.update(
+      {
+        id: userId,
+      },
+      {
+        avatar: avatar,
+      },
+    );
   }
 }

@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -15,6 +16,7 @@ import UpdatePostDto from './dto/updatePost.dto';
 import JwtAuthenticationGuard from '../auth/guard/jwt-authentication.guard';
 import FindOneParams from '../utils/findOneParams';
 import RequestWithUser from '../auth/interface/requestWithUser.interface';
+import { PaginationParams } from '../utils/types/paginationParams';
 
 @Controller('/api/v1/posts')
 export default class PostsController {
@@ -24,6 +26,17 @@ export default class PostsController {
   @UseGuards(JwtAuthenticationGuard)
   getAllPosts() {
     return this.postsService.getAllPosts();
+  }
+
+  @Get('search')
+  async getPosts(
+    @Query('search') search: string,
+    @Query() { offset, limit, startId }: PaginationParams,
+  ) {
+    if (search) {
+      return this.postsService.searchForPosts(search);
+    }
+    return this.postsService.getPostsWithAuthors(offset, limit, startId);
   }
 
   @Get(':id')

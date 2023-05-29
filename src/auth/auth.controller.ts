@@ -13,6 +13,7 @@ import RequestWithUser from './interface/requestWithUser.interface';
 import { LocalAuthenticationGuard } from './guard/localAuthentication.guard';
 import JwtAuthenticationGuard from './guard/jwt-authentication.guard';
 import UsersService from '../users/users.service';
+import JwtRefreshTokenGuard from './guard/jwt-refresh-token.guard';
 
 @Controller('/api/v1/auth')
 export class AuthController {
@@ -58,6 +59,17 @@ export class AuthController {
   @UseGuards(JwtAuthenticationGuard)
   @Get('me')
   authenticate(@Req() request: RequestWithUser) {
+    return request.user;
+  }
+
+  @UseGuards(JwtRefreshTokenGuard)
+  @Get('refresh')
+  refresh(@Req() request: RequestWithUser) {
+    const accessTokenCookie = this.authService.getCookieWithJwtAccessToken(
+      request.user.id,
+    );
+
+    request.res.setHeader('Set-Cookie', accessTokenCookie);
     return request.user;
   }
 }

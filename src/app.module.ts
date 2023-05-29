@@ -8,6 +8,8 @@ import { PostsModule } from './posts/posts.module';
 import { DatabaseModule } from './database';
 import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
+import { LocalFilesModule } from './localFiles/localFiles.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -24,11 +26,17 @@ import { CategoriesModule } from './categories/categories.module';
         JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.string().required(),
         JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
         JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        AWS_REGION: Joi.string().required(),
+        AWS_ACCESS_KEY_ID: Joi.string().required(),
+        AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+        AWS_PUBLIC_BUCKET_NAME: Joi.string().required(),
       }),
     }),
     DatabaseModule,
     AuthModule,
     CategoriesModule,
+    LocalFilesModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

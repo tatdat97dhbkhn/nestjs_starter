@@ -10,6 +10,7 @@ import { Exclude } from 'class-transformer';
 
 import Address from '../addresses/address.entity';
 import Post from '../posts/post.entity';
+import LocalFile from '../localFiles/localFile.entity';
 
 @Entity()
 export default class User {
@@ -41,4 +42,10 @@ export default class User {
 
   @OneToMany(() => Post, (post: Post) => post.author)
   public posts: Post[];
+
+  @JoinColumn({ name: 'avatarId' })
+  @OneToOne(() => LocalFile, {
+    nullable: true,
+  })
+  public avatar?: LocalFile;
 }
